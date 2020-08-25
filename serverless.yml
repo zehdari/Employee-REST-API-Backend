@@ -1,0 +1,56 @@
+service:
+  name: interview-test
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+provider:
+  name: local
+  runtime: nodejs8.10
+  stage: ${opt:stage, 'dev'}
+  # Environment variables for all functions in this service
+  environment:
+    NODE_ENV: ${opt:nodeEnv, self:provider.stage}
+    
+custom:
+  webpackIncludeModules:
+    forceInclude:
+      - mysql2
+
+
+functions:
+  list:
+    handler: handler.list
+    name: list
+    events:
+    - http:
+        path: /employees/
+        method: get
+        cors: true
+  create:
+    handler: handler.create
+    name: create
+    events:
+      - http:
+          path: /employees/
+          method: post
+          cors: true
+  activate:
+    handler: handler.activate
+    name: activate
+    events:
+      - http:
+          path: /employees/{id}/
+          method: patch
+          cors: true
+  deactivate:
+    handler: handler.deactivate
+    name: deactivate
+    events:
+      - http:
+          path: /employees/{id}/
+          method: delete
+          cors: true
+
+

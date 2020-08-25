@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e;
+
+if [[ -n "$1" ]]; then
+  PROFILE=$1
+fi;
+
+if [[ -z "$AWS_PROFILE" ]]; then
+  PROFILE=dev
+fi;
+
+node --inspect=127.0.0.1:9229 node_modules/.bin/serverless offline start \
+-t -c --webpack-no-watch \
+--stage ${PROFILE} \
+--skipCacheInvalidation \
+--port 9999;
